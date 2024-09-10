@@ -10,8 +10,8 @@ const createServer = () => {
     app.use(jsonParseErrorHandler);
     app.use(limiTotal);
     
-    app.use('/users',  userRoutes);
-    app.use('/products', productRoutes);
+    app.use('/users',auth,  userRoutes);
+    app.use('/products',auth, productRoutes);
     return app;
 };
 
