@@ -1,19 +1,31 @@
 // Gestiona las peticiones HTTP y las respuestas, delegando la lógica de negocio a los servicios.
 const { validationResult } = require('express-validator');
-const UserService = require('../services/userService');
+const userService = require('../services/userService');
 
-class UserController {
+class userController {
     constructor() {
-        this.userService = new UserService();
+        this.userService = new userService();
     }
 
     async getUser(req, res) {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-            const user = await this.userService.getUserById(req.params.id);
-            res.status(200).json(user);
+            const product = await this.userService.getUserById(req.params.id);
+            res.status(200).json(product);
         } catch (error) {
+            const errorObj = JSON.parse(error.message);
+            res.status(errorObj.status).json({ message: errorObj.message });
+        }
+    }
+
+    async getUsers(req, res) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+            const product = await this.userService.getAllUsers();
+            res.status(200).json(product);
+        }catch(error) {
             const errorObj = JSON.parse(error.message);
             res.status(errorObj.status).json({ message: errorObj.message });
         }
@@ -31,12 +43,24 @@ class UserController {
         }
     }
 
+    async verifyUser(req, res) {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() })
+            const user = await this.userService.getUserByNickAndPassword(req.body);
+            res.status(201).json(user);
+        } catch (error) {
+            const errorObj = JSON.parse(error.message)
+            res.status(errorObj.status).json({message: errorObj.message})
+        }
+    }
+
     async updateUser(req, res) {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-            const user = await this.userService.updateUser(req.params.id, req.body);
-            res.status(200).json(user);
+            const product = await this.userService.updateUser(req.params.id, req.body);
+            res.status(200).json(product);
         } catch (error) {
             const errorObj = JSON.parse(error.message);
             res.status(errorObj.status).json({ message: errorObj.message });
@@ -47,11 +71,11 @@ class UserController {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
-            const user = await this.userService.deleteUser(req.params.id);
+            const product = await this.userService.deleteUser(req.params.id);
             // Este código indica que la solicitud fue exitosa y que el recurso ha sido eliminado, pero no hay contenido adicional para enviar en la respuesta.
-            res.status(204).json(user);
+            res.status(204).json(product);
             // En algunos casos, 200 OK también puede ser utilizado si la respuesta incluye información adicional o confirmación sobre la eliminación. Sin embargo, 204 No Content es la opción más estándar para indicar que un recurso ha sido eliminado y no hay contenido adicional en la respuesta.
-            // res.status(200).json(user);
+            // res.status(200).json(product);
         } catch (error) {
             const errorObj = JSON.parse(error.message);
             res.status(errorObj.status).json({ message: errorObj.message });
@@ -60,12 +84,12 @@ class UserController {
     
     async searchUsers(req, res) {
         try {
-            const users = await this.userService.searchUsersByName(req.query.name);
-            res.json(users);
+            const products = await this.userService.searchUsersByName(req.query.name);
+            res.json(products);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     }
 }
 
-module.exports = UserController;
+module.exports = userController;

@@ -1,7 +1,7 @@
 // Implementa la lógica de negocio y coordina las interacciones entre el dominio y la infraestructura.
 const ProductRepository = require('../../domain/repositories/productRepository');
 
-class ProductService {
+class productService {
     constructor() {
         this.productRepository = new ProductRepository();
     }
@@ -10,6 +10,14 @@ class ProductService {
         const product = await this.productRepository.getById(id);
         if (!product) {
             throw new Error(JSON.stringify({status: 404, message: 'Product not found'}));
+        }
+        return product;
+    }
+
+    async getAllProducts() {
+        const product = await this.productRepository.getAll();
+        if (!product) {
+            throw new Error(JSON.stringify({status: 404, message: 'Products not found'}));
         }
         return product;
     }
@@ -40,4 +48,4 @@ class ProductService {
     }
 }
 
-module.exports = ProductService;
+module.exports = productService;

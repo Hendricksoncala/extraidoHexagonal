@@ -1,7 +1,8 @@
 // Contiene la interfaz para interactuar con la base de datos o cualquier otro tipo de almacenamiento de datos.
 const User = require('../models/userModel');
+const bcrypt = require ("bcryptjs")
 
-class UserRepository {
+class userRepository {
     async getById(id) {
         try {
             const user = new User();
@@ -10,7 +11,6 @@ class UserRepository {
             throw new Error(JSON.stringify({status: 400, message: 'Error retrieving user'}));
         }
     }
-
     async save(userData) {
         try {
             const user = new User();
@@ -20,13 +20,29 @@ class UserRepository {
         }
     }
 
+    async getNick(body) {
+        try {
+            const user = new User();
+            let {nick} = body;
+            let query ={
+                $match: {
+                    nick
+                }
+            }
+            return await user.aggregate(query);
+        } catch (error) {
+            throw new Error(JSON.stringify({status: 400, message: "Error retrieving user"}))
+        }
+    };
+
     async getPassword(password, user) {
         let {password:pass} = user
         delete user.password
         const isMatch = await bcrypt.compare(password, pass);
-        if (!isMatch) throw new Error(JSON.stringify({status: 401, message: 'Invalid password'}))
-            return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' })
+        if (!isMatch) throw new Error(JSON.stringify({status: 401, message: "No autorizado"}))
+        return JsonWebTokenError.sign(user, process.env.JWT_SECRET, {expiresIn: '1h'})
     }
+
 
     async updateById(id, updateData) {
         try {
@@ -56,4 +72,4 @@ class UserRepository {
     }
 }
 
-module.exports = UserRepository;
+module.exports = userRepository;
