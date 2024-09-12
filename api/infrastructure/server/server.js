@@ -11,8 +11,15 @@ const createServer = () => {
     app.use(jsonParseErrorHandler);
     app.use(limiTotal);
     
-    app.use("/users", userRoutes)
-    app.use('/products', productRoutes);
+    app.use("/users", (req, res, next)=> {
+        req.__dirname = __dirname;
+        next();
+    },userRoutes)
+
+    app.use("/home", sessionAuth,auth,(req, res, next)=> {
+        req.__dirname = __dirname;
+        next();
+    },productRoutes)
     return app;
 };
 
