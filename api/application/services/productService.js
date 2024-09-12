@@ -1,5 +1,5 @@
 // Implementa la lógica de negocio y coordina las interacciones entre el dominio y la infraestructura.
-const ProductRepository = require('../../domain/repositories/productRepository');
+const ProductRepository = require('../../../domain/repositories/productRepository');
 
 class productService {
     constructor() {

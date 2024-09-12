@@ -1,5 +1,5 @@
 // Implementa la lógica de negocio y coordina las interacciones entre el dominio y la infraestructura.
-const UserRepository = require('../../domain/repositories/userRepository');
+const UserRepository = require('../../../domain/repositories/userRepository');
 
 class UserService {
     constructor() {
@@ -26,7 +26,6 @@ class UserService {
         const token = await this.userRepository.getPassword(body.password, user);
         if (!token) throw new Error(JSON.stringify({status: 404, message: "password service"}));
         return token;
-
     }
 
     async updateUser(id, data) {
