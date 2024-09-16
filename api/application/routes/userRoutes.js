@@ -3,8 +3,7 @@ const express = require('express');
 const UserController = require('../controllers/userController');
 const UserValidator = require('../validator/userValidator');
 const {auth} = require("../middlewares/authenticateToken")
-const sessionAuth = require("../middlewares/sessionLogin")
-
+const {sessionAuth} = require("../middlewares/sessionLogin")
 
 const router = express.Router();
 const userController = new UserController();
